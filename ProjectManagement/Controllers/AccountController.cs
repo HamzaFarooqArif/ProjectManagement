@@ -57,6 +57,10 @@ namespace ProjectManagement.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "danger";
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -68,6 +72,10 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "danger";
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -75,6 +83,17 @@ namespace ProjectManagement.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
+            if(UserManager.FindByEmail(model.Email) != null)
+            {
+                var userid = UserManager.FindByEmail(model.Email).Id;
+                if (!UserManager.IsEmailConfirmed(userid))
+                {
+                    ViewBag.alertVisibility = "block";
+                    ViewBag.alertMessage = "Please confirm your Email";
+                    ViewBag.alertType = "danger";
+                    return View(model);
+                }
+            }
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
@@ -139,6 +158,9 @@ namespace ProjectManagement.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "success";
             return View();
         }
 
@@ -149,6 +171,10 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "success";
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -163,7 +189,11 @@ namespace ProjectManagement.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
+                    ViewBag.alertVisibility = "block";
+                    ViewBag.alertMessage = "Registration Successful. Please check your Email for confirmation";
+                    ViewBag.alertType = "success";
+                    return View();
                 }
                 AddErrors(result);
             }
