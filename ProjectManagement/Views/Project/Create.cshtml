@@ -14,9 +14,10 @@
 <div class="form-horizontal">
     <h4>ProjectCreateViewModel</h4>
     <hr />
-    <div class="alert alert-@ViewBag.alertType @ViewBag.alertVisibility" role="alert">
-        @ViewBag.alertMessage
+    <div id="alertMessage" class="alert alert-@ViewBag.alertType @ViewBag.alertVisibility" role="alert">
+        @Html.Raw(@ViewBag.alertMessage)
     </div>
+    
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -35,12 +36,10 @@
     <div class="form-group">
         @Html.LabelFor(model => model.emails, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextAreaFor(model => model.emails, new { @class = "form-control", @readonly="readonly" })
+            @Html.TextAreaFor(model => model.emails, new { @class = "form-control", @readonly = "readonly" })
             @Html.ValidationMessageFor(model => model.emails, "", new { @class = "text-danger" })
         </div>
     </div>
-
-
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Create" class="btn btn-default" />
@@ -56,7 +55,6 @@
 <script>
     $(document).ready(function () {
         $("#addBtn").click(function () {
-
             $.ajax({
                 url: '/Project/verifyUserEmail',
                 type: 'POST',
@@ -70,7 +68,7 @@
                         $("#alertMessage").empty();
                         $("#alertMessage").append(r.message);
                     }
-                    if ($("#emails").val().includes($("#emailTextBox").val())) {
+                    else if ($("#emails").val().includes($("#emailTextBox").val())) {
                         $("#alertMessage").removeClass("hidden");
                         $("#alertMessage").empty();
                         $("#alertMessage").append("Email already added");
@@ -89,19 +87,14 @@
     function addToList(item)
     {
         //$("#emailList").removeClass('hidden');
-        //$("#emailList").append('<li class="list-group-item">' + item + '</li>');
-
-        
+        //$("#emailList").append('<li class="list-group-item">' + item + '</li>');   
         if ($("#emails").val() == "") {
             $("#emails").val(item);
         }
         else {
             $("#emails").val($("#emails").val()+','+item);
         }
-        
     }
-
-
 </script>
 
 

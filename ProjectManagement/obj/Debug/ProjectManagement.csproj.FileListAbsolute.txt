@@ -98,8 +98,6 @@ C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectMan
 C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\bin\Microsoft.Owin.Security.OAuth.xml
 C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.csprojAssemblyReference.cache
-C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.csproj.CoreCompileInputs.cache
-C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.csproj.CopyComplete
 C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.dll
 C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.pdb
+C:\Users\Acer\Documents\Visual Studio 2019\Projects\ProjectManagement\ProjectManagement\obj\Debug\ProjectManagement.csprojResolveAssemblyReference.cache

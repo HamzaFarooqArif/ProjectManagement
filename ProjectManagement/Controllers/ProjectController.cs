@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using ProjectManagement.Utilities;
 
 namespace ProjectManagement.Controllers
 {
@@ -16,19 +17,24 @@ namespace ProjectManagement.Controllers
             ProjectManagementEntities db = new ProjectManagementEntities();
             List<AspNetUser> users = db.AspNetUsers.ToList();
             string currentEmail = users.Where(u => u.Id.Equals(User.Identity.GetUserId())).FirstOrDefault().Email;
-            if(item.Equals(currentEmail))
+            if(!MailUtility.validateEmail(item))
             {
-                var data = new { id = 1, message = "Your email is not needed explicitly" };
+                var data = new { id = 1, message = "Enter a valid email" };
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            if (item.Equals(currentEmail))
+            {
+                var data = new { id = 2, message = "Your email is not needed explicitly" };
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
             if (!users.Any(u => u.Email.Equals(item)))
             {
-                var data = new { id = 2, message = "Email not found" };
+                var data = new { id = 3, message = "Email not found" };
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
             if (users.Where(u => u.Email.Equals(item)).FirstOrDefault().EmailConfirmed == false)
             {
-                var data = new { id = 3, message = "Email not confirmed" };
+                var data = new { id = 4, message = "Email not confirmed" };
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
             else
@@ -36,24 +42,8 @@ namespace ProjectManagement.Controllers
                 var data = new { id = 0, message = "" };
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
-
-            //ProjectManagementEntities db = new ProjectManagementEntities();
-            //if(!db.AspNetUsers.Any(u=>u.Email.Equals(item)))
-            //{
-            //    return Json(res.Select(x => new
-            //    {
-            //        ID = "0",
-            //        Name = "name"
-            //    }));
-            //}
-            ////IEnumerable<GetProducts_Result> res = db.GetProducts();
-            //List<string> res = new List<string>();
-            //return Json(res.Select(x => new
-            //{
-            //    ID = "id",
-            //    Name = "name"
-            //}));
         }
+        
         // GET: Project
         public ActionResult Index()
         {
@@ -72,6 +62,7 @@ namespace ProjectManagement.Controllers
             ViewBag.alertVisibility = "hidden";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
+            
             return View();
         }
 
@@ -85,38 +76,62 @@ namespace ProjectManagement.Controllers
             try
             {
                 ProjectManagementEntities db = new ProjectManagementEntities();
-                List<string> emails = model.emails.Split(',').ToList();
-
-                if (db.Projects.Any(u=>u.ProjectName.Equals(model.name)))
+                List<string> emails = new List<string>();
+                if (db.Projects.Any(u => u.ProjectName.Equals(model.name)))
                 {
                     ViewBag.alertVisibility = "";
                     ViewBag.alertMessage = "Project name already exists";
                     return View(model);
                 }
-                //db.Projects.Add(new Project { ProjectName = model.name });
-                //db.SaveChanges();
+                if (string.IsNullOrWhiteSpace(model.name))
+                {
+                    ViewBag.alertVisibility = "";
+                    ViewBag.alertMessage = "Project Name is required";
+                    return View(model);
+                }
+                if (model.emails != null)
+                {
+                    emails = model.emails.Split(',').ToList().Distinct().ToList();
+                    if(emails.Any(e=>e.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()))))
+                    {
+                        emails.Remove(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+                    }
+                    var badMails = MailUtility.verifyEmailList(emails);
+                    if(badMails.Count > 0)
+                    {
+                        ViewBag.alertVisibility = "";
+                        string errorList = "";
+                        foreach (Tuple<string, string> m in badMails)
+                        {
+                            errorList += m.Item1 + " " + m.Item2 + "<br>";
+                        }
+                        ViewBag.alertMessage = errorList;
+                        return View(model);
+                    }
+                }
 
-                //ProjectUser_MTM p_mtm = new ProjectUser_MTM();
-                //p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
-                //p_mtm.UserId = db.AspNetUsers.Where(u => u.Id.Equals(User.Identity.GetUserId())).FirstOrDefault().Id;
-                //p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
-                //p_mtm.Confirmation = "0";
-                //db.ProjectUser_MTM.Add(p_mtm);
-                //db.SaveChanges();
+                db.Projects.Add(new Project { ProjectName = model.name });
+                db.SaveChanges();
 
-                //foreach (string e in emails)
-                //{
-                //    ProjectUser_MTM p_mtm_ = new ProjectUser_MTM();
-                //    p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
-                //    p_mtm_.UserId = db.AspNetUsers.Where(u=>u.Email.Equals(e)).FirstOrDefault().Id;
-                //    p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
-                //    p_mtm_.Confirmation = "0";
-                //    db.ProjectUser_MTM.Add(p_mtm_);
-                //    db.SaveChanges();
-                //}
+                ProjectUser_MTM p_mtm = new ProjectUser_MTM();
+                p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
+                p_mtm.UserId = User.Identity.GetUserId();
+                p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
+                p_mtm.Confirmation = "0";
 
-                
-                
+                db.ProjectUser_MTM.Add(p_mtm);
+                db.SaveChanges();
+
+                foreach (string e in emails)
+                {
+                    ProjectUser_MTM p_mtm_ = new ProjectUser_MTM();
+                    p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
+                    p_mtm_.UserId = db.AspNetUsers.Where(u => u.Email.Equals(e)).FirstOrDefault().Id;
+                    p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
+                    p_mtm_.Confirmation = "0";
+                    db.ProjectUser_MTM.Add(p_mtm_);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index","Home");
             }
             catch
