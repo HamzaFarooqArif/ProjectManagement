@@ -64,17 +64,17 @@
                 }),
                 success: function (r) {
                     if (r.id != 0) {
-                        $("#alertMessage").removeClass("hidden");
+                        $("#alertMessage").removeClass("d-none");
                         $("#alertMessage").empty();
                         $("#alertMessage").append(r.message);
                     }
                     else if ($("#emails").val().includes($("#emailTextBox").val())) {
-                        $("#alertMessage").removeClass("hidden");
+                        $("#alertMessage").removeClass("d-none");
                         $("#alertMessage").empty();
                         $("#alertMessage").append("Email already added");
                     }
                     else {
-                        $("#alertMessage").addClass("hidden");
+                        $("#alertMessage").addClass("d-none");
                         addToList($("#emailTextBox").val());
                         $("#emailTextBox").val("");
                     }

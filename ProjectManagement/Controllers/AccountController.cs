@@ -57,7 +57,7 @@ namespace ProjectManagement.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
 
@@ -72,7 +72,7 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
 
@@ -88,7 +88,7 @@ namespace ProjectManagement.Controllers
                 var userid = UserManager.FindByEmail(model.Email).Id;
                 if (!UserManager.IsEmailConfirmed(userid))
                 {
-                    ViewBag.alertVisibility = "block";
+                    ViewBag.alertVisibility = "";
                     ViewBag.alertMessage = "Please confirm your Email";
                     ViewBag.alertType = "danger";
                     return View(model);
@@ -158,7 +158,7 @@ namespace ProjectManagement.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "success";
             return View();
@@ -171,7 +171,7 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "success";
 
@@ -190,7 +190,7 @@ namespace ProjectManagement.Controllers
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
                     //return RedirectToAction("Index", "Home");
-                    ViewBag.alertVisibility = "block";
+                    ViewBag.alertVisibility = "";
                     ViewBag.alertMessage = "Registration Successful. Please check your Email for confirmation";
                     ViewBag.alertType = "success";
                     return View();
@@ -220,7 +220,7 @@ namespace ProjectManagement.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "success";
 
@@ -234,7 +234,7 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "success";
 
@@ -243,7 +243,7 @@ namespace ProjectManagement.Controllers
                 var user = await UserManager.FindByEmailAsync(model.Email);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
-                    ViewBag.alertVisibility = "block";
+                    ViewBag.alertVisibility = "";
                     ViewBag.alertMessage = "Email not confirmed yet. Please check your Email for confirmation link";
                     ViewBag.alertType = "danger";
                     // Don't reveal that the user does not exist or is not confirmed

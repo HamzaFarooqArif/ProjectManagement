@@ -43,8 +43,11 @@ namespace ProjectManagement.Controllers
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
         }
-        
-        // GET: Project
+
+        public ActionResult confrimJoinProject(string email, string project, string code)
+        {
+            return View();
+        }
         public ActionResult Index()
         {
             return View();
@@ -59,7 +62,7 @@ namespace ProjectManagement.Controllers
         // GET: Project/Create
         public ActionResult Create()
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
             
@@ -70,7 +73,7 @@ namespace ProjectManagement.Controllers
         [HttpPost]
         public ActionResult Create(ProjectCreateViewModel model)
         {
-            ViewBag.alertVisibility = "hidden";
+            ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
             try
@@ -117,6 +120,10 @@ namespace ProjectManagement.Controllers
                 p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
                 p_mtm.UserId = User.Identity.GetUserId();
                 p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
+
+                string a = Request.RawUrl;
+
+
                 p_mtm.Confirmation = "0";
 
                 db.ProjectUser_MTM.Add(p_mtm);
