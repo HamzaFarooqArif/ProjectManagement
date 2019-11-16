@@ -10,35 +10,38 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.admin)
-        </th>
-        <th></th>
-    </tr>
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.admin)
+            </th>
+            <th>Manage</th>
+        </tr>
+    </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.admin)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id = item.id })
-            @if (item.editable)
-            {
-                <span>|</span>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id })
-                <span>|</span>
-                @Html.ActionLink("Delete", "Delete", new { id = item.id })
-            }
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.admin)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.id })
+                @if (item.editable)
+                {
+                    <span>|</span>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id })
+                    <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                }
+            </td>
+        </tr>
+    }
 
 </table>

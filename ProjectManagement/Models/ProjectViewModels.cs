@@ -33,6 +33,15 @@ namespace ProjectManagement.Models
         [Display(Name = "Project Admin")]
         public string admin { get; set; }
         public bool editable { get; set; }
-        public List<string> emails { get; set; }
+        [Display(Name = "Team")]
+        public List<ProjectUserViewModel> users { get; set; }
+    }
+    public class ProjectUserViewModel
+    {
+        public string id { get; set; }
+        [Display(Name = "Email")]
+        public string email { get; set; }
+        public string role { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

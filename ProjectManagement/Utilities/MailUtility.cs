@@ -112,5 +112,33 @@ namespace ProjectManagement.Utilities
             }
             return projModelList;
         }
+        public static List<ProjectUserViewModel> getEmailsByProjectName(string projectName)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            Project proj = db.Projects.Where(p => p.ProjectName.Equals(projectName)).FirstOrDefault();
+            List<AspNetUser> users = proj.ProjectUser_MTM.Select(u=>u.AspNetUser).ToList();
+            List<ProjectUserViewModel> result = new List<ProjectUserViewModel>();
+            foreach (AspNetUser user in users)
+            {
+                ProjectUserViewModel model = new ProjectUserViewModel();
+                model.id = user.Id;
+                model.email = user.Email;
+                model.isAdmin = getProjectAdmin(projectName).Equals(user.Email);
+                model.role = getUserRole(user.Email, projectName);
+                result.Add(model);
+            }
+            return result;
+        }
+        public static string getUserRole(string email, string projectName)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            return db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().ProjectUser_MTM.ToList().Where(p => p.Project.ProjectName.Equals(projectName)).FirstOrDefault().AspNetRole.Name;
+        }
+        public static List<ProjectUserViewModel> getEmailsByProjectId(int id)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
+            return getEmailsByProjectName(proj.ProjectName);
+        }
     }
 }

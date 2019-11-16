@@ -1,0 +1,58 @@
+﻿@model ProjectManagement.Models.ProjectDetailsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProjectDetailsViewModel</h4>
+    <hr />
+    <section class="landing">
+        <div class="container">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.name)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.users)
+                </dt>
+                <dd class="col-sm-9">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                            
+                            @foreach (var item in Model.users)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.email)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.role)
+                                    </td>
+                                </tr>
+                            }
+</table>
+                </dd>
+            </dl>
+        </div>
+    </section>
+</div>
+<p>
+    @if (Model.editable)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.id })
+        <span>|</span>
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

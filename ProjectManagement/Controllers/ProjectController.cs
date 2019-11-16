@@ -86,8 +86,17 @@ namespace ProjectManagement.Controllers
         // GET: Project/Details/5
         public ActionResult Details(int id)
         {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            ProjectDetailsViewModel model = new ProjectDetailsViewModel();
+            Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
+
+            model.id = proj.Id;
+            model.name = proj.ProjectName;
+            model.admin = MailUtility.getProjectAdmin(proj.ProjectName);
+            model.editable = model.admin.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+            model.users = MailUtility.getEmailsByProjectId(id);
             
-            return View();
+            return View(model);
         }
 
         // GET: Project/Create
