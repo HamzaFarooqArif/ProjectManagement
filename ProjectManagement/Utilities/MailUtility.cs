@@ -42,6 +42,13 @@ namespace ProjectManagement.Utilities
             return users.Where(u => u.Id.Equals(userId)).FirstOrDefault().Email;
         }
 
+        public static string getIdFromEmail(string email)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            List<AspNetUser> users = db.AspNetUsers.ToList();
+            return users.Where(u => u.Email.Equals(email)).FirstOrDefault().Id;
+        }
+
         public static bool validateEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email)) return false;
@@ -56,7 +63,7 @@ namespace ProjectManagement.Utilities
             return _rdm.Next(_min, _max);
         }
 
-        void sendMail(IdentityMessage message)
+        public static void sendMail(IdentityMessage message)
         {
             MailMessage msg = new MailMessage();
             msg.From = new MailAddress(ConfigurationManager.AppSettings["Email"].ToString());
@@ -70,12 +77,7 @@ namespace ProjectManagement.Utilities
             smtpClient.EnableSsl = true;
             smtpClient.Send(msg);
         }
-        void sendProjectJoin(string currentUrl, string email, string project, string code)
-        {
-            
-            IdentityMessage message = new IdentityMessage();
-            message.Body = "Join the project <b>" + project + "</b> by clicking <a href=";
 
-        }
+        
     }
 }

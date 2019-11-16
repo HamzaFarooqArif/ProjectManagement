@@ -43,11 +43,38 @@ namespace ProjectManagement.Controllers
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
         }
-        
-
         public ActionResult confrimJoinProject(string email, string project, string code)
         {
-            return View();
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            string userId = MailUtility.getIdFromEmail(email);
+            int projectId = db.Projects.Where(p => p.ProjectName.Equals(project)).FirstOrDefault().Id;
+            string confirmation = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(userId) && pu.ProjectId == projectId).FirstOrDefault().Confirmation;
+            if (code.Equals(confirmation))
+            {
+                db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(userId) && pu.ProjectId == projectId).FirstOrDefault().Confirmation = "0";
+                db.SaveChanges();
+                return Content("You joined project " + project + " successfully");
+            }
+            else
+            {
+                return Content("Failed to join project " + project);
+            }
+        }
+        public void sendProjConfirmation(string projectName, string email)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+
+            string userId = MailUtility.getIdFromEmail(email);
+            int projectId = db.Projects.Where(p => p.ProjectName.Equals(projectName)).FirstOrDefault().Id;
+            string confirmation = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(userId) && pu.ProjectId == projectId).FirstOrDefault().Confirmation;
+            string callbackUrl = Request.Url.AbsoluteUri.Substring(0, Request.Url.AbsoluteUri.Length - Request.Url.AbsolutePath.Length) + "/Project/confrimJoinProject/?email=" + email + "&project=" + projectName + "&code=" + confirmation;
+
+            IdentityMessage message = new IdentityMessage();
+            message.Destination = email;
+            message.Subject = "Join Project";
+            message.Body = callbackUrl;
+
+            MailUtility.sendMail(message);
         }
         public ActionResult Index()
         {
@@ -69,13 +96,15 @@ namespace ProjectManagement.Controllers
 
             string selectListEmails = "<select multiple data-role='tagsinput'></select>";
             ViewBag.selectedEmails = selectListEmails;
+
             return View();
         }
-
+        
         // POST: Project/Create
         [HttpPost]
         public ActionResult Create(ProjectCreateViewModel model)
         {
+            
             ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
@@ -155,6 +184,11 @@ namespace ProjectManagement.Controllers
                 db.ProjectUser_MTM.Add(p_mtm_);
                 db.SaveChanges();
             }
+
+            foreach (string e in emails)
+            {
+                sendProjConfirmation(model.name, e);
+            }
             return RedirectToAction("Index", "Home");
         }
 
@@ -202,4 +236,5 @@ namespace ProjectManagement.Controllers
             }
         }
     }
+
 }
