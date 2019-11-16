@@ -20,13 +20,17 @@ namespace ProjectManagement.Utilities
             var result = new List<Tuple<string, string>>();
             foreach (string mail in mails)
             {
-                if (!users.Any(u => u.Email.Equals(mail)))
+                if(!validateEmail(mail))
                 {
-                    result.Add(new Tuple<string, string>(mail, "Email not found"));
+                    result.Add(new Tuple<string, string>(mail, "is not a valid Email"));
+                }
+                else if (!users.Any(u => u.Email.Equals(mail)))
+                {
+                    result.Add(new Tuple<string, string>(mail, "is not found"));
                 }
                 else if (users.Where(u => u.Email.Equals(mail)).FirstOrDefault().EmailConfirmed == false)
                 {
-                    result.Add(new Tuple<string, string>(mail, "Email not confirmed"));
+                    result.Add(new Tuple<string, string>(mail, "is not confirmed"));
                 }
             }
             return result;

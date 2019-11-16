@@ -31,14 +31,7 @@
             @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-md-2">Add Collaborators</label>
-        <div class="col-md-10">
-            <input id="emailTextBox" class="form-control text-box" type="text" value="">
-            <button id="addBtn" type="button" class="btn">Add</button>
-        </div>
-    </div>
-    <div class="form-group">
+    <div class="form-group d-none">
         @Html.LabelFor(model => model.emails, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.TextAreaFor(model => model.emails, new { @class = "form-control", @readonly = "readonly" })
@@ -46,11 +39,11 @@
         </div>
     </div>
     <div class="form-group">
-        <select multiple data-role="tagsinput">
-            <option selected="" value="Def">Def</option>
-            <option selected="" value="abc">Def</option>
-        </select>
-        
+        @Html.LabelFor(model => model.emails, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Raw(@ViewBag.selectedEmails);
+            @Html.ValidationMessageFor(model => model.emails, "", new { @class = "text-danger" })
+        </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -59,7 +52,6 @@
     </div>
 </div>
 }
-<button onclick="myFunction()">Click me</button>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
@@ -75,7 +67,7 @@
         "use strict";
 
         function b(b, c) {
-            this.isInit = !0, this.itemsArray = [], this.$element = a(b), this.$element.hide(), this.isSelect = "SELECT" === b.tagName, this.multiple = this.isSelect && b.hasAttribute("multiple"), this.objectItems = c && c.itemValue, this.placeholderText = b.hasAttribute("placeholder") ? this.$element.attr("placeholder") : "", this.inputSize = Math.max(1, this.placeholderText.length), this.$container = a('<div class="bootstrap-tagsinput"></div>'), this.$input = a('<input type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container), this.$element.before(this.$container), this.build(c), this.isInit = !1
+            this.isInit = !0, this.itemsArray = [], this.$element = a(b), this.$element.hide(), this.isSelect = "SELECT" === b.tagName, this.multiple = this.isSelect && b.hasAttribute("multiple"), this.objectItems = c && c.itemValue, this.placeholderText = b.hasAttribute("placeholder") ? this.$element.attr("placeholder") : "Hit Enter after each Email", this.inputSize = Math.max(25, this.placeholderText.length), this.$container = a('<div class="bootstrap-tagsinput"></div>'), this.$input = a('<input type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container), this.$element.before(this.$container), this.build(c), this.isInit = !1
         }
 
         function c(a, b) {
@@ -398,53 +390,6 @@
     }(window.jQuery);
     //# sourceMappingURL=bootstrap-tagsinput.min.js.map
 </script>
-<script>
-    $(document).ready(function () {
-        $("#addBtn").click(function () {
-            $.ajax({
-                url: '/Project/verifyUserEmail',
-                type: 'POST',
-                datatype: "json",
-                data: jQuery.param({
-                    item: $("#emailTextBox").val(),
-                }),
-                success: function (r) {
-                    if (r.id != 0) {
-                        $("#alertMessage").removeClass("d-none");
-                        $("#alertMessage").empty();
-                        $("#alertMessage").append(r.message);
-                    }
-                    else if ($("#emails").val().includes($("#emailTextBox").val())) {
-                        $("#alertMessage").removeClass("d-none");
-                        $("#alertMessage").empty();
-                        $("#alertMessage").append("Email already added");
-                    }
-                    else {
-                        $("#alertMessage").addClass("d-none");
-                        addToList($("#emailTextBox").val());
-                        $("#emailTextBox").val("");
-                    }
-                }
-            });
-            
-            //addToList($("#emailTextBox").val());
-        });
-    });
 
-    function addToList(item)
-    {
-        //$("#emailList").removeClass('hidden');
-        //$("#emailList").append('<li class="list-group-item">' + item + '</li>');   
-        if ($("#emails").val() == "") {
-            $("#emails").val(item);
-        }
-        else {
-            $("#emails").val($("#emails").val()+','+item);
-        }
-    }
-    function myFunction() {
-        alert($("select").val());
-    }
-</script>
 
 

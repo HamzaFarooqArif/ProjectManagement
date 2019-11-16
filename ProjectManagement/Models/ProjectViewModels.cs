@@ -11,6 +11,8 @@ namespace ProjectManagement.Models
         [Required]
         [Display(Name = "Project Name")]
         public string name { get; set; }
+        [Required]
+        [Display(Name = "Collaborators")]
         public string emails { get; set; }
 
     }

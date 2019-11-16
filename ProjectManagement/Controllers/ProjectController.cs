@@ -67,6 +67,8 @@ namespace ProjectManagement.Controllers
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
 
+            string selectListEmails = "<select multiple data-role='tagsinput'></select>";
+            ViewBag.selectedEmails = selectListEmails;
             return View();
         }
 
@@ -77,75 +79,83 @@ namespace ProjectManagement.Controllers
             ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
-            try
+
+            
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            List<string> emails = new List<string>();
+            string selectListEmails = "<select multiple data-role='tagsinput'></select>";
+            if (model.emails != null)
             {
-                ProjectManagementEntities db = new ProjectManagementEntities();
-                List<string> emails = new List<string>();
-                if (db.Projects.Any(u => u.ProjectName.Equals(model.name)))
+                emails = model.emails.Split(',').ToList().Distinct().ToList();
+                selectListEmails = "<select multiple data-role='tagsinput'>";
+                foreach (string email in emails)
+                {
+                    selectListEmails += "<option selected='' value="+email+">"+email+"</option>";
+                }
+                selectListEmails += "</select>";
+            }
+            if (db.Projects.Any(u => u.ProjectName.Equals(model.name)))
+            {
+                ViewBag.alertVisibility = "";
+                ViewBag.alertMessage = "Project name already exists";
+                ViewBag.selectedEmails = selectListEmails;
+                return View(model);
+            }
+            if (string.IsNullOrWhiteSpace(model.name))
+            {
+                ViewBag.alertVisibility = "";
+                ViewBag.alertMessage = "Project Name is required";
+                ViewBag.selectedEmails = selectListEmails;
+                return View(model);
+            }
+            if (emails.Count > 0)
+            {
+                if (emails.Any(e => e.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()))))
+                {
+                    emails.Remove(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+                }
+                var badMails = MailUtility.verifyEmailList(emails);
+                if (badMails.Count > 0)
                 {
                     ViewBag.alertVisibility = "";
-                    ViewBag.alertMessage = "Project name already exists";
+                    string errorList = "";
+                    foreach (Tuple<string, string> m in badMails)
+                    {
+                        errorList += m.Item1 + " " + m.Item2 + "<br>";
+                    }
+                    ViewBag.alertMessage = errorList;
+                    ViewBag.selectedEmails = selectListEmails;
                     return View(model);
                 }
-                if (string.IsNullOrWhiteSpace(model.name))
-                {
-                    ViewBag.alertVisibility = "";
-                    ViewBag.alertMessage = "Project Name is required";
-                    return View(model);
-                }
-                if (model.emails != null)
-                {
-                    emails = model.emails.Split(',').ToList().Distinct().ToList();
-                    if(emails.Any(e=>e.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()))))
-                    {
-                        emails.Remove(MailUtility.getEmailFromId(User.Identity.GetUserId()));
-                    }
-                    var badMails = MailUtility.verifyEmailList(emails);
-                    if(badMails.Count > 0)
-                    {
-                        ViewBag.alertVisibility = "";
-                        string errorList = "";
-                        foreach (Tuple<string, string> m in badMails)
-                        {
-                            errorList += m.Item1 + " " + m.Item2 + "<br>";
-                        }
-                        ViewBag.alertMessage = errorList;
-                        return View(model);
-                    }
-                }
-
-                db.Projects.Add(new Project { ProjectName = model.name });
-                db.SaveChanges();
-
-                ProjectUser_MTM p_mtm = new ProjectUser_MTM();
-                p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
-                p_mtm.UserId = User.Identity.GetUserId();
-                p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
-
-                string a = Request.RawUrl;
-
-
-                p_mtm.Confirmation = "0";
-
-                db.ProjectUser_MTM.Add(p_mtm);
-                db.SaveChanges();
-
-                foreach (string e in emails)
-                {
-                    ProjectUser_MTM p_mtm_ = new ProjectUser_MTM();
-                    p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
-                    p_mtm_.UserId = db.AspNetUsers.Where(u => u.Email.Equals(e)).FirstOrDefault().Id;
-                    p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
-                    p_mtm_.Confirmation = "0";
-                    db.ProjectUser_MTM.Add(p_mtm_);
-                    db.SaveChanges();
-                }
-                return RedirectToAction("Index","Home");
             }
-            catch
+
+            db.Projects.Add(new Project { ProjectName = model.name });
+            db.SaveChanges();
+
+            ProjectUser_MTM p_mtm = new ProjectUser_MTM();
+            p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
+            p_mtm.UserId = User.Identity.GetUserId();
+            p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
+
+            string a = Request.RawUrl;
+
+
+            p_mtm.Confirmation = "0";
+
+            db.ProjectUser_MTM.Add(p_mtm);
+            db.SaveChanges();
+
+            foreach (string e in emails)
             {
-                return View();
+                ProjectUser_MTM p_mtm_ = new ProjectUser_MTM();
+                p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
+                p_mtm_.UserId = db.AspNetUsers.Where(u => u.Email.Equals(e)).FirstOrDefault().Id;
+                p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
+                p_mtm_.Confirmation = "0";
+                db.ProjectUser_MTM.Add(p_mtm_);
+                db.SaveChanges();
             }
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Project/Edit/5
