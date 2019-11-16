@@ -15,7 +15,6 @@
                 <dt class="col-sm-3">
                     @Html.DisplayNameFor(model => model.name)
                 </dt>
-
                 <dd class="col-sm-9">
                     @Html.DisplayFor(model => model.name)
                 </dd>
@@ -28,21 +27,24 @@
                             <tr>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Confirmed</th>
                             </tr>
                         </thead>
-                            
-                            @foreach (var item in Model.users)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.email)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.role)
-                                    </td>
-                                </tr>
-                            }
-</table>
+                        @foreach (var item in Model.users)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.role)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.confirmed)
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </dd>
             </dl>
         </div>

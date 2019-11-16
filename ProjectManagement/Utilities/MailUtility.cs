@@ -125,6 +125,11 @@ namespace ProjectManagement.Utilities
                 model.email = user.Email;
                 model.isAdmin = getProjectAdmin(projectName).Equals(user.Email);
                 model.role = getUserRole(user.Email, projectName);
+                if(getConfirmation(user.Email, projectName).Equals("0"))
+                {
+                    model.confirmed = true;
+                }
+                else model.confirmed = false;
                 result.Add(model);
             }
             return result;
@@ -133,6 +138,11 @@ namespace ProjectManagement.Utilities
         {
             ProjectManagementEntities db = new ProjectManagementEntities();
             return db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().ProjectUser_MTM.ToList().Where(p => p.Project.ProjectName.Equals(projectName)).FirstOrDefault().AspNetRole.Name;
+        }
+        public static string getConfirmation(string email, string projectName)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            return db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().ProjectUser_MTM.ToList().Where(p => p.Project.ProjectName.Equals(projectName)).FirstOrDefault().Confirmation;
         }
         public static List<ProjectUserViewModel> getEmailsByProjectId(int id)
         {
