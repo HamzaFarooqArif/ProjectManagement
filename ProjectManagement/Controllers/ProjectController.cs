@@ -78,7 +78,29 @@ namespace ProjectManagement.Controllers
         }
         public ActionResult Index()
         {
-            return View();
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            string uid = User.Identity.GetUserId();
+            List<Project> projList = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(uid)).Select(p=>p.Project).ToList();
+            List<ProjectIndexViewModel> projModelList = new List<ProjectIndexViewModel>();
+
+            foreach (Project p in projList)
+            {
+                ProjectIndexViewModel projmodel = new ProjectIndexViewModel();
+                projmodel.id = p.Id;
+                projmodel.name = p.ProjectName;
+                projmodel.admin = MailUtility.getProjectAdmin(p.ProjectName);
+                if(projmodel.admin.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId())))
+                {
+                    projmodel.editable = true;
+                }
+                else
+                {
+                    projmodel.editable = false;
+                }
+                projModelList.Add(projmodel);
+            }
+
+            return View(projModelList);
         }
 
         // GET: Project/Details/5
@@ -189,7 +211,7 @@ namespace ProjectManagement.Controllers
             {
                 sendProjConfirmation(model.name, e);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Project");
         }
 
         // GET: Project/Edit/5

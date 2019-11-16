@@ -78,6 +78,20 @@ namespace ProjectManagement.Utilities
             smtpClient.Send(msg);
         }
 
+        public static string getProjectAdmin(string name)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            Project proj = db.Projects.Where(p => p.ProjectName.Equals(name)).FirstOrDefault();
+            string adminId = db.ProjectUser_MTM.Where(pu => pu.ProjectId == proj.Id && pu.UserRole == db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id).FirstOrDefault().UserId;
+            string adminMail = getEmailFromId(adminId);
+            return adminMail;
+        }
         
+        //public static List<ProjectIndexViewModel> getProjectsbyEmail(string email)
+        //{
+        //    ProjectManagementEntities db = new ProjectManagementEntities();
+        //    List<ProjectIndexViewModel> projList = new List<ProjectIndexViewModel>();
+        //    var list = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(getIdFromEmail(email))).Select(p => p.Project);
+        //}
     }
 }
