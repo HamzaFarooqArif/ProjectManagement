@@ -140,7 +140,7 @@ namespace ProjectManagement.Controllers
             string a = Request.RawUrl;
 
 
-            p_mtm.Confirmation = "0";
+            p_mtm.Confirmation = MailUtility.GenerateRandomNo().ToString();
 
             db.ProjectUser_MTM.Add(p_mtm);
             db.SaveChanges();
@@ -151,7 +151,7 @@ namespace ProjectManagement.Controllers
                 p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
                 p_mtm_.UserId = db.AspNetUsers.Where(u => u.Email.Equals(e)).FirstOrDefault().Id;
                 p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
-                p_mtm_.Confirmation = "0";
+                p_mtm_.Confirmation = MailUtility.GenerateRandomNo().ToString(); ;
                 db.ProjectUser_MTM.Add(p_mtm_);
                 db.SaveChanges();
             }
