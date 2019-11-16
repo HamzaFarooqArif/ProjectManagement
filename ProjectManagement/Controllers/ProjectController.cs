@@ -43,6 +43,7 @@ namespace ProjectManagement.Controllers
                 return Json(data, JsonRequestBehavior.AllowGet);
             }
         }
+        
 
         public ActionResult confrimJoinProject(string email, string project, string code)
         {
@@ -65,7 +66,7 @@ namespace ProjectManagement.Controllers
             ViewBag.alertVisibility = "d-none";
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
-            
+
             return View();
         }
 
