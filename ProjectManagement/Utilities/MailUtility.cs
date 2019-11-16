@@ -86,12 +86,31 @@ namespace ProjectManagement.Utilities
             string adminMail = getEmailFromId(adminId);
             return adminMail;
         }
-        
-        //public static List<ProjectIndexViewModel> getProjectsbyEmail(string email)
-        //{
-        //    ProjectManagementEntities db = new ProjectManagementEntities();
-        //    List<ProjectIndexViewModel> projList = new List<ProjectIndexViewModel>();
-        //    var list = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(getIdFromEmail(email))).Select(p => p.Project);
-        //}
+
+        public static List<ProjectIndexViewModel> getProjectsbyEmail(string email)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            string uid = getIdFromEmail(email);
+            List<Project> projList = db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(uid)).Select(p => p.Project).ToList();
+            List<ProjectIndexViewModel> projModelList = new List<ProjectIndexViewModel>();
+
+            foreach (Project p in projList)
+            {
+                ProjectIndexViewModel projmodel = new ProjectIndexViewModel();
+                projmodel.id = p.Id;
+                projmodel.name = p.ProjectName;
+                projmodel.admin = MailUtility.getProjectAdmin(p.ProjectName);
+                if (projmodel.admin.Equals(email))
+                {
+                    projmodel.editable = true;
+                }
+                else
+                {
+                    projmodel.editable = false;
+                }
+                projModelList.Add(projmodel);
+            }
+            return projModelList;
+        }
     }
 }

@@ -25,6 +25,14 @@ namespace ProjectManagement.Models
         public string admin { get; set; }
         public bool editable { get; set; }
     }
-
-
+    public class ProjectDetailsViewModel
+    {
+        public int id { get; set; }
+        [Display(Name = "Project Name")]
+        public string name { get; set; }
+        [Display(Name = "Project Admin")]
+        public string admin { get; set; }
+        public bool editable { get; set; }
+        public List<string> emails { get; set; }
+    }
 }
