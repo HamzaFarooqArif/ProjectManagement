@@ -215,6 +215,12 @@ namespace ProjectManagement.Controllers
             ViewBag.selectedEmails = selectListEmails;
 
             ProjectManagementEntities db = new ProjectManagementEntities();
+
+            if (!MailUtility.getProjectAdmin(db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName).Equals(MailUtility.getEmailFromId(User.Identity.GetUserId())))
+            {
+                return Content("You are not allowed to edit project " + db.Projects.Where(p=>p.Id == id).FirstOrDefault().ProjectName);
+            }
+
             ProjectCreateViewModel model = new ProjectCreateViewModel();
 
             Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
@@ -252,8 +258,13 @@ namespace ProjectManagement.Controllers
             ViewBag.alertMessage = "";
             ViewBag.alertType = "danger";
 
-
             ProjectManagementEntities db = new ProjectManagementEntities();
+
+            if(!MailUtility.getProjectAdmin(db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName).Equals(MailUtility.getEmailFromId(User.Identity.GetUserId())))
+            {
+                return Content("You are not allowed to edit project "+model.name);
+            }
+
             List<string> newEmails = new List<string>();
             List<string> oldEmails = db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectUser_MTM.Select(u => u.AspNetUser).ToList().Select(e => e.Email).ToList();
             List<string> emailsToAdd = new List<string>();
@@ -270,13 +281,6 @@ namespace ProjectManagement.Controllers
                 }
                 selectListEmails += "</select>";
             }
-            //if (db.Projects.Any(u => u.ProjectName.Equals(model.name)))
-            //{
-            //    ViewBag.alertVisibility = "";
-            //    ViewBag.alertMessage = "Project name already exists";
-            //    ViewBag.selectedEmails = selectListEmails;
-            //    return View(model);
-            //}
             if (string.IsNullOrWhiteSpace(model.name))
             {
                 ViewBag.alertVisibility = "";
@@ -304,8 +308,6 @@ namespace ProjectManagement.Controllers
                     return View(model);
                 }
             }
-
-            
 
             foreach (string mail in newEmails)
             {
