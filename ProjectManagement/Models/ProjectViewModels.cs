@@ -8,6 +8,7 @@ namespace ProjectManagement.Models
 {
     public class ProjectCreateViewModel
     {
+        public int id { get; set; }
         [Required]
         [Display(Name = "Project Name")]
         [MinLength(1)]

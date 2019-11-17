@@ -233,6 +233,7 @@ namespace ProjectManagement.Controllers
                 else emails += ","+emailsList[i];
             }
 
+            model.id = id;
             model.name = proj.ProjectName;
             model.emails = emails;
 
