@@ -357,24 +357,40 @@ namespace ProjectManagement.Controllers
         // GET: Project/Delete/5
         public ActionResult Delete(int id)
         {
+            ProjectManagementEntities db = new ProjectManagementEntities();
 
-            return View();
+            if (!MailUtility.getProjectAdmin(db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName).Equals(MailUtility.getEmailFromId(User.Identity.GetUserId())))
+            {
+                return Content("You are not allowed to delete project " + db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName);
+            }
+
+            ProjectDetailsViewModel model = new ProjectDetailsViewModel();
+            Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
+
+            model.id = proj.Id;
+            model.name = proj.ProjectName;
+            model.admin = MailUtility.getProjectAdmin(proj.ProjectName);
+            model.editable = model.admin.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+            model.users = MailUtility.getEmailsByProjectId(id);
+
+            return View(model);
         }
 
         // POST: Project/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, ProjectDetailsViewModel model)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            ProjectManagementEntities db = new ProjectManagementEntities();
 
-                return RedirectToAction("Index");
-            }
-            catch
+            if (!MailUtility.getProjectAdmin(db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName).Equals(MailUtility.getEmailFromId(User.Identity.GetUserId())))
             {
-                return View();
+                return Content("You are not allowed to delete project " + db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName);
             }
+
+            db.Projects.Remove(db.Projects.Where(p => p.Id == id).FirstOrDefault());
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Project");
         }
     }
 

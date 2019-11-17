@@ -1,0 +1,88 @@
+﻿@model ProjectManagement.Models.ProjectDetailsViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ProjectDetailsViewModel</h4>
+    <hr />
+    @*<dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.admin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.admin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.editable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.editable)
+        </dd>
+
+    </dl>*@
+    <section class="landing">
+        <div class="container">
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.name)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.users)
+                </dt>
+                <dd class="col-sm-9">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Confirmed</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.users)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.role)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.confirmed)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </dd>
+            </dl>
+        </div>
+    </section>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
