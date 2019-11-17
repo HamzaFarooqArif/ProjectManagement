@@ -207,23 +207,149 @@ namespace ProjectManagement.Controllers
         // GET: Project/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ViewBag.alertVisibility = "d-none";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "danger";
+
+            string selectListEmails = "<select multiple data-role='tagsinput'></select>";
+            ViewBag.selectedEmails = selectListEmails;
+
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            ProjectCreateViewModel model = new ProjectCreateViewModel();
+
+            Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
+            List<string> emailsList = proj.ProjectUser_MTM.Select(u => u.AspNetUser).Select(e => e.Email).ToList();
+            string emails = "";
+            
+            for(int i = 0; i < emailsList.Count; i++)
+            {
+                if (i == 0) emails += emailsList[i];
+                else emails += ","+emailsList[i];
+            }
+
+            model.name = proj.ProjectName;
+            model.emails = emails;
+
+            if(emailsList.Count > 0)
+            {
+                selectListEmails = "<select multiple data-role='tagsinput'>";
+                foreach (string e in emailsList)
+                {
+                    selectListEmails += "<option selected='' value=" + e + ">" + e + "</option>";
+                }
+                selectListEmails += "</select>";
+                ViewBag.selectedEmails = selectListEmails;
+            }
+            
+            return View(model);
         }
 
         // POST: Project/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, ProjectCreateViewModel model)
         {
-            try
-            {
-                // TODO: Add update logic here
+            ViewBag.alertVisibility = "d-none";
+            ViewBag.alertMessage = "";
+            ViewBag.alertType = "danger";
 
-                return RedirectToAction("Index");
-            }
-            catch
+
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            List<string> newEmails = new List<string>();
+            List<string> oldEmails = db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectUser_MTM.Select(u => u.AspNetUser).ToList().Select(e => e.Email).ToList();
+            List<string> emailsToAdd = new List<string>();
+            List<string> emailsToRemove = new List<string>();
+
+            string selectListEmails = "<select multiple data-role='tagsinput'></select>";
+            if (model.emails != null)
             {
-                return View();
+                newEmails = model.emails.Split(',').ToList().Distinct().ToList();
+                selectListEmails = "<select multiple data-role='tagsinput'>";
+                foreach (string email in newEmails)
+                {
+                    selectListEmails += "<option selected='' value=" + email + ">" + email + "</option>";
+                }
+                selectListEmails += "</select>";
             }
+            //if (db.Projects.Any(u => u.ProjectName.Equals(model.name)))
+            //{
+            //    ViewBag.alertVisibility = "";
+            //    ViewBag.alertMessage = "Project name already exists";
+            //    ViewBag.selectedEmails = selectListEmails;
+            //    return View(model);
+            //}
+            if (string.IsNullOrWhiteSpace(model.name))
+            {
+                ViewBag.alertVisibility = "";
+                ViewBag.alertMessage = "Project Name is required";
+                ViewBag.selectedEmails = selectListEmails;
+                return View(model);
+            }
+            if (newEmails.Count > 0)
+            {
+                if (newEmails.Any(e => e.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()))))
+                {
+                    newEmails.Remove(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+                }
+                var badMails = MailUtility.verifyEmailList(newEmails);
+                if (badMails.Count > 0)
+                {
+                    ViewBag.alertVisibility = "";
+                    string errorList = "";
+                    foreach (Tuple<string, string> m in badMails)
+                    {
+                        errorList += m.Item1 + " " + m.Item2 + "<br>";
+                    }
+                    ViewBag.alertMessage = errorList;
+                    ViewBag.selectedEmails = selectListEmails;
+                    return View(model);
+                }
+            }
+
+            
+
+            foreach (string mail in newEmails)
+            {
+                if(!oldEmails.Exists(e=>e.EndsWith(mail)))
+                {
+                    emailsToAdd.Add(mail);
+                }
+            }
+
+            foreach (string mail in oldEmails)
+            {
+                if (!newEmails.Exists(e => e.EndsWith(mail)) && !MailUtility.getEmailFromId(User.Identity.GetUserId()).Equals(mail))
+                {
+                    emailsToRemove.Add(mail);
+                }
+            }
+
+            db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName = model.name;
+            db.SaveChanges();
+
+            foreach(string mail in emailsToRemove)
+            {
+                string uid = MailUtility.getIdFromEmail(mail);
+                db.ProjectUser_MTM.Remove(db.ProjectUser_MTM.Where(pu => pu.UserId.Equals(uid) && pu.ProjectId == id).FirstOrDefault());
+                db.SaveChanges();
+            }
+
+            foreach(string e in emailsToAdd)
+            {
+                ProjectUser_MTM p_mtm_ = new ProjectUser_MTM();
+                p_mtm_.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
+                p_mtm_.UserId = db.AspNetUsers.Where(u => u.Email.Equals(e)).FirstOrDefault().Id;
+                p_mtm_.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("User")).FirstOrDefault().Id;
+                p_mtm_.Confirmation = MailUtility.GenerateRandomNo().ToString(); ;
+                db.ProjectUser_MTM.Add(p_mtm_);
+                db.SaveChanges();
+            }
+
+            foreach (string e in newEmails)
+            {
+                sendProjConfirmation(model.name, e);
+            }
+
+            return RedirectToAction("Index", "Project");
         }
 
         // GET: Project/Delete/5

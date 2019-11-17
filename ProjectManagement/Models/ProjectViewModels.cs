@@ -10,8 +10,9 @@ namespace ProjectManagement.Models
     {
         [Required]
         [Display(Name = "Project Name")]
+        [MinLength(1)]
         public string name { get; set; }
-        [Required]
+
         [Display(Name = "Collaborators")]
         public string emails { get; set; }
 
