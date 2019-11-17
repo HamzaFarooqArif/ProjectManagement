@@ -55,6 +55,10 @@ namespace ProjectManagement.Controllers
                 db.SaveChanges();
                 return Content("You joined project " + project + " successfully");
             }
+            else if(confirmation.Equals("0"))
+            {
+                return Content("You already joined project " + project);
+            }
             else
             {
                 return Content("Failed to join project " + project);
@@ -177,11 +181,7 @@ namespace ProjectManagement.Controllers
             p_mtm.ProjectId = db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id;
             p_mtm.UserId = User.Identity.GetUserId();
             p_mtm.UserRole = db.AspNetRoles.Where(r => r.Name.Equals("Admin")).FirstOrDefault().Id;
-
-            string a = Request.RawUrl;
-
-
-            p_mtm.Confirmation = MailUtility.GenerateRandomNo().ToString();
+            p_mtm.Confirmation = "0";
 
             db.ProjectUser_MTM.Add(p_mtm);
             db.SaveChanges();
@@ -357,6 +357,7 @@ namespace ProjectManagement.Controllers
         // GET: Project/Delete/5
         public ActionResult Delete(int id)
         {
+
             return View();
         }
 

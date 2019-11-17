@@ -1,0 +1,12 @@
+CREATE TABLE Project(
+	Id INT PRIMARY KEY IDENTITY(1, 1),
+	ProjectName varchar(50)
+);
+
+CREATE TABLE ProjectUser_MTM(
+	Id INT PRIMARY KEY IDENTITY(1, 1),
+	ProjectId INT REFERENCES Project(Id) ON DELETE CASCADE,
+	UserId NVARCHAR(128) REFERENCES AspNetUsers(Id),
+	UserRole NVARCHAR(128) REFERENCES AspNetRoles(Id),
+	Confirmation NVARCHAR(128)
+);
