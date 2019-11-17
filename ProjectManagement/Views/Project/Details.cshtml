@@ -1,12 +1,23 @@
-﻿@model ProjectManagement.Models.ProjectDetailsViewModel
+﻿<head>
+    <style>
+        body {
+            background: url("http://www.lunaartdesign.com/wp-content/uploads/2018/01/blog-featured-img-3.jpg");
+            background-repeat: no-repeat;
+            background-size: 100vw;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+
+@model ProjectManagement.Models.ProjectDetailsViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2 class="text-white">Details</h2>
 
-<div>
+<div class="bg-white">
     <h4>ProjectDetailsViewModel</h4>
     <hr />
     <section class="landing">
@@ -22,7 +33,7 @@
                     @Html.DisplayNameFor(model => model.users)
                 </dt>
                 <dd class="col-sm-9">
-                    <table class="table">
+                    <table class="table table-hover bg-light">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Email</th>

@@ -13,8 +13,6 @@
     <!-- Material Design Bootstrap -->
     <link rel="stylesheet" href="~/css/mdb.min.css">
     <link href="~/css/style.min.css" rel="stylesheet">
-
-    
     <style type="text/css">
     html,
     body,
@@ -42,6 +40,13 @@
       .navbar:not(.top-nav-collapse) {
         background: #929FBA !important;
       }
+    }
+    body
+    {
+        background-image: url("../img/App_bg.jpg");
+        background-repeat: no-repeat;
+        background-size: 100vw;
+        background-attachment: fixed;
     }
     </style>
 </head>
@@ -92,7 +97,7 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
+        <footer class="text-white">
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>

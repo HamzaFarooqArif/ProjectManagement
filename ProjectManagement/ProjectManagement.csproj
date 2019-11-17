@@ -239,6 +239,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\App_bg.jpg" />
     <Content Include="Models\EntityModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EntityModel.edmx</DependentUpon>
@@ -312,7 +313,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="font\" />
-    <Folder Include="img\" />
     <Folder Include="js\" />
     <Folder Include="scss\" />
   </ItemGroup>
