@@ -289,6 +289,13 @@ namespace ProjectManagement.Controllers
                 ViewBag.selectedEmails = selectListEmails;
                 return View(model);
             }
+            if (db.Projects.Any(p => p.ProjectName.Equals(model.name)) && db.Projects.Where(p => p.ProjectName.Equals(model.name)).FirstOrDefault().Id != id)
+            {
+                ViewBag.alertVisibility = "";
+                ViewBag.alertMessage = "Project Name already exists";
+                ViewBag.selectedEmails = selectListEmails;
+                return View(model);
+            }
             if (newEmails.Count > 0)
             {
                 if (newEmails.Any(e => e.Equals(MailUtility.getEmailFromId(User.Identity.GetUserId()))))
@@ -325,7 +332,7 @@ namespace ProjectManagement.Controllers
                     emailsToRemove.Add(mail);
                 }
             }
-
+            
             db.Projects.Where(p => p.Id == id).FirstOrDefault().ProjectName = model.name;
             db.SaveChanges();
 
