@@ -43,10 +43,9 @@
     }
     body
     {
-        background-image: url("../img/App_bg.jpg");
-        background-repeat: no-repeat;
-        background-size: 100vw;
-        background-attachment: fixed;
+        background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(122,122,228,1) 50%, rgba(0,212,255,1) 100%);
+
     }
     </style>
 </head>
@@ -58,7 +57,7 @@
 
                 <!-- Brand -->
                 <strong>
-                    @Html.ActionLink(System.Configuration.ConfigurationManager.AppSettings["ApplicationName"], "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink(ProjectManagement.Utilities.Config.load("ApplicationName"), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
                 </strong>
                 
                 <!-- Collapse -->
@@ -72,9 +71,7 @@
 
                     <!-- Left -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            @Html.ActionLink("Home", "Index", new { controller = "Home" }, new { hidefocus = "hidefocus", @class = "nav-link" })
-                        </li>
+                        
                         <li class="nav-item">
                             @Html.ActionLink("About", "About", new { controller = "Home" }, new { hidefocus = "hidefocus", @class = "nav-link" })
                         </li>
@@ -95,10 +92,12 @@
 
 
     <div class="container body-content">
-        @RenderBody()
+        <div style="min-height: 65vh">
+            @RenderBody()
+        </div>
         <hr />
         <footer class="text-white">
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Hamza Farooq. Inc</p>
         </footer>
     </div>
     

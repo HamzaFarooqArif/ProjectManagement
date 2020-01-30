@@ -1,0 +1,1 @@
+[{"name":"Email","value":"devkomalshehzadi786@gmail.com"},{"name":"Password","value":"komal1234"},{"name":"Host","value":"smtp.gmail.com"},{"name":"ApplicationName","value":"Inventify"}]
