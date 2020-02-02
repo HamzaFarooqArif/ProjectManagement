@@ -65,6 +65,12 @@ namespace ProjectManagement.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Username")]
+        [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username should have Letters and Numbers only")]
+        [MaxLength(6, ErrorMessage = "Username Must be a maximum of 15 characters")]
+        public string username { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }

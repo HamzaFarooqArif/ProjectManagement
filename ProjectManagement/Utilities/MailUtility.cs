@@ -155,5 +155,11 @@ namespace ProjectManagement.Utilities
         {
             return getEmailFromId(HttpContext.Current.User.Identity.GetUserId());
         }
+        public static AspNetUser getUserFromEmail(string email)
+        {
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            AspNetUser user = db.AspNetUsers.Where(u=>u.Email.Equals(email)).FirstOrDefault();
+            return user;
+        }
     }
 }
