@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ProjectManagement.Models;
+using ProjectManagement.Utilities;
 
 namespace ProjectManagement.Controllers
 {
@@ -18,6 +19,30 @@ namespace ProjectManagement.Controllers
 
         public ManageController()
         {
+        }
+
+        public ActionResult EditUsername()
+        {
+            resetUserName model = new resetUserName();
+            model.username = MailUtility.getUserFromEmail(MailUtility.getCurrentEmail()).UserName;
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult EditUsername(resetUserName model)
+        {
+            try
+            {
+                ProjectManagementEntities db = new ProjectManagementEntities();
+                string email = MailUtility.getCurrentEmail();
+                db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().UserName = model.username;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)

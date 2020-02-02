@@ -115,4 +115,19 @@ namespace ProjectManagement.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+    public class resetUserName
+    {
+        [Required]
+        [Display(Name = "Username")]
+        [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username should have Letters and Numbers only")]
+        [MaxLength(6, ErrorMessage = "Username Must be a maximum of 15 characters")]
+        public string username { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+    }
 }
