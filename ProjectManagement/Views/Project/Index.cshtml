@@ -1,47 +1,59 @@
 ﻿@model IEnumerable<ProjectManagement.Models.ProjectIndexViewModel>
 
-@{
-    ViewBag.Title = "Index";
-}
 
-<h2 class= "text-white">Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table table-hover bg-light" >
-    <thead class="thead-dark">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.admin)
-            </th>
-            <th>Manage</th>
-        </tr>
-    </thead>
-
+<style>
+    .projectWindow {
+        width: 306px;
+        border-radius: 5px;
+        overflow: hidden;
+        display: inline-block;
+        margin: 0 2vw 20px 2vw;
+    }
+    .projectDescription {
+        background-color: #FFFFFF;
+        padding: 10px;
+        border: 1px solid #CDCDCD;
+    }
+    .projectTitle
+    {
+        color: #000000;
+    }
+    .userName
+    {
+        color: #000000;
+    }
+</style>
+<h1 class="text-white">Your Awesome Projects</h1>
+<a class="btn btn-light" href="/Project/Create" role="button">Create New</a>
+<br />
+<br />
+<div style="height:auto">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.admin)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.id })
+        <div class="projectWindow">
+            <img style="width:100%" src="~/img/bg_img1.jpg" />
+            <div class="projectDescription">
+                <strong>
+                    <a class="projectTitle" href="#"><b>@Html.DisplayFor(modelItem => item.name)</b></a>
+                </strong>
+                <span>by</span><br />
+                <strong>
+                    <a class="userName" href="#">@Html.DisplayFor(modelItem => item.admin)</a>
+                </strong>
                 @if (item.editable)
                 {
-                    <span>|</span>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.id })
-                    <span>|</span>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                    <br />
+                    <br />
+                    @Html.ActionLink("Manage", "Details", new { id = item.id }, new { @class = "userName" })
                 }
-            </td>
-        </tr>
+                else
+                {
+                    <br />
+                    <br />
+                    @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "userName" })
+                }
+            </div>
+        </div>
     }
+</div>
 
-</table>

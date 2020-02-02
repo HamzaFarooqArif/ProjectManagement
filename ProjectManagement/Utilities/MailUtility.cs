@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -149,6 +150,10 @@ namespace ProjectManagement.Utilities
             ProjectManagementEntities db = new ProjectManagementEntities();
             Project proj = db.Projects.Where(p => p.Id == id).FirstOrDefault();
             return getEmailsByProjectName(proj.ProjectName);
+        }
+        public static string getCurrentEmail()
+        {
+            return getEmailFromId(HttpContext.Current.User.Identity.GetUserId());
         }
     }
 }

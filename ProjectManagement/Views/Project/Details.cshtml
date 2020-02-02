@@ -1,25 +1,13 @@
-﻿<head>
-    <style>
-        body {
-            background: url("http://www.lunaartdesign.com/wp-content/uploads/2018/01/blog-featured-img-3.jpg");
-            background-repeat: no-repeat;
-            background-size: 100vw;
-            background-attachment: fixed;
-        }
-    </style>
-</head>
-
-@model ProjectManagement.Models.ProjectDetailsViewModel
+﻿@model ProjectManagement.Models.ProjectDetailsViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Project Details";
 }
 
-<h2 class="text-white">Details</h2>
+    <h2 class="text-white">Project Details</h2>
 
-<div class="bg-white">
-    <h4>ProjectDetailsViewModel</h4>
-    <hr />
+<div class="bg-white rounded">
+    <br />
     <section class="landing">
         <div class="container">
             <dl class="row">
@@ -64,10 +52,8 @@
 <p>
     @if (Model.editable)
     {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.id })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { role = "button", @class = "btn btn-light" })
         <span>|</span>
-        @Html.ActionLink("Delete", "Delete", new { id = Model.id })
-        <span>|</span>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.id }, new { role = "button", @class = "btn btn-light" })
     }
-    @Html.ActionLink("Back to List", "Index")
 </p>

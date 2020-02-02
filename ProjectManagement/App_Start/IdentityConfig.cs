@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using ProjectManagement.Models;
+using ProjectManagement.Utilities;
 
 namespace ProjectManagement
 {
@@ -31,13 +32,13 @@ namespace ProjectManagement
         void sendMail(IdentityMessage message)
         {
             MailMessage msg = new MailMessage();
-            msg.From = new MailAddress(ConfigurationManager.AppSettings["Email"].ToString());
+            msg.From = new MailAddress(Config.load("Email"));
             msg.To.Add(new MailAddress(message.Destination));
             msg.Subject = message.Subject;
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message.Body, null, MediaTypeNames.Text.Html));
             
-            SmtpClient smtpClient = new SmtpClient(ConfigurationManager.AppSettings["Host"].ToString(), Convert.ToInt32(587));
-            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Email"].ToString(), ConfigurationManager.AppSettings["Password"].ToString());
+            SmtpClient smtpClient = new SmtpClient(Config.load("Host"), Convert.ToInt32(587));
+            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(Config.load("Email"), Config.load("Password"));
             smtpClient.Credentials = credentials;
             smtpClient.EnableSsl = true;
             

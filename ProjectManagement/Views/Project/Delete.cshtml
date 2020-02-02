@@ -1,26 +1,14 @@
-﻿<head>
-    <style>
-        body {
-            background: url("http://www.lunaartdesign.com/wp-content/uploads/2018/01/blog-featured-img-3.jpg");
-            background-repeat: no-repeat;
-            background-size: 100vw;
-            background-attachment: fixed;
-        }
-    </style>
-</head>
-@model ProjectManagement.Models.ProjectDetailsViewModel
+﻿@model ProjectManagement.Models.ProjectDetailsViewModel
 
 @{
     ViewBag.Title = "Delete";
 }
 
-<h2 class="text-white">Delete</h2>
-
 <h3 class="text-white">Are you sure you want to delete this?</h3>
 <div>
-    <h4 class="text-white">ProjectDetailsViewModel</h4>
     <hr />
-    <section class="landing bg-white">
+    <section class="landing bg-white rounded">
+        <br />
         <div class="container">
             <dl class="row">
                 <dt class="col-sm-3">
@@ -66,9 +54,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete" class="btn btn-light" /> |
         </div>
     }
 </div>

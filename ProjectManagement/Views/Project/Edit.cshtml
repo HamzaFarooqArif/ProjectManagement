@@ -1,26 +1,20 @@
 ﻿<head>
     <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/assets/app.css">
-    <style>
-        body {
-            background: url("http://www.lunaartdesign.com/wp-content/uploads/2018/01/blog-featured-img-3.jpg");
-        }
-    </style>
 </head>
 @model ProjectManagement.Models.ProjectCreateViewModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Project Details";
 }
 
-<h2 class="text-white">Edit</h2>
+<h2 class="text-white">Edit Project Details</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4 class="text-white">ProjectCreateViewModel</h4>
         <hr />
         <div id="alertMessage" class="alert alert-@ViewBag.alertType @ViewBag.alertVisibility" role="alert">
             @Html.Raw(@ViewBag.alertMessage)
@@ -51,16 +45,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-light" />
+                @Html.ActionLink("Delete", "Delete", new { id = Model.id }, new { role = "button", @class = "btn btn-light" })
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Delete", "Delete", new { id = Model.id }) |
-    @Html.ActionLink("Back to List", "Index")
-</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
     /*

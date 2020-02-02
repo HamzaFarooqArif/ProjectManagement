@@ -5,18 +5,16 @@
 @model ProjectManagement.Models.ProjectCreateViewModel
 
 @{
-    ViewBag.Title = "Create";
-
+    ViewBag.Title = "Create Project";
 }
 
-<h2 class="text-white">Create</h2>
+<h2 class="text-white">Create Project</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
 <div class="form-horizontal">
-    <h4 class="text-white">ProjectCreateViewModel</h4>
     <hr />
     <div id="alertMessage" class="alert alert-@ViewBag.alertType @ViewBag.alertVisibility" role="alert">
         @Html.Raw(@ViewBag.alertMessage)
@@ -46,14 +44,11 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+            <input type="submit" value="Create" class="btn btn-light" />
         </div>
     </div>
 </div>
 }
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
