@@ -1,4 +1,5 @@
-﻿using ProjectManagement.Utilities;
+﻿using ProjectManagement.Models;
+using ProjectManagement.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,8 @@ namespace ProjectManagement.Controllers
     {
         public ActionResult Index()
         {
-            Config.save("Email", "devkomalshehzadi786@gmail.com");
-            Config.save("Password", "komal1234");
-            Config.save("Host", "smtp.gmail.com");
-            Config.save("ApplicationName", "Inventify");
-
+            //Notifications.addToNotifications(MailUtility.getCurrentEmail(), "Confirm Join", "Link to confirm join");
+            //List<Notification> list = Notifications.GetNotifications(MailUtility.getCurrentEmail());
             return View();
         }
 

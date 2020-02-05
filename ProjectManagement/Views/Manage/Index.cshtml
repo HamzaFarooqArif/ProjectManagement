@@ -46,4 +46,47 @@
             </div>
         </section>
     </div>
-    </div>
+</div>
+<h2 class="text-white">Notifications</h2>
+<div class="table-responsive">
+    <!--Table-->
+    <table class="table table-dark table-fixed table-hover text-white">
+
+        <!--Table head-->
+        <thead0>
+            <tr>
+                <th>Seen</th>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+        <!--Table body-->
+        <tbody>
+            @foreach (ProjectManagement.Models.Notification notif in ViewBag.notifications)
+            {
+                if (notif.IsRead == false)
+                {
+                    <tr style="cursor: pointer" onclick="window.location='#';">
+                        <th scope="row"><input type="checkbox" disabled></th>
+                        <td >@notif.Subject</td>
+                        <td class="overflow-hidden">@notif.Body</td>
+                        <td>@notif.Time</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="bg-dark" style="cursor: pointer" onclick="window.location='#';">
+                        <th scope="row"><input type="checkbox" checked="checked" disabled></th>
+                        <td>@notif.Subject</td>
+                        <td class="overflow-hidden">@notif.Body</td>
+                        <td>@notif.Time</td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <!--Table body-->
+    </table>
+    <!--Table-->
+</div>

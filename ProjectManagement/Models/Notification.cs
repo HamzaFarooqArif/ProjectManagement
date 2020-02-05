@@ -15,14 +15,20 @@ namespace ProjectManagement.Models
 using System;
     using System.Collections.Generic;
     
-public partial class AspNetUserLogin
+public partial class Notification
 {
 
-    public string LoginProvider { get; set; }
-
-    public string ProviderKey { get; set; }
+    public int Id { get; set; }
 
     public string UserId { get; set; }
+
+    public Nullable<System.DateTime> Time { get; set; }
+
+    public Nullable<bool> IsRead { get; set; }
+
+    public string Subject { get; set; }
+
+    public string Body { get; set; }
 
 
 

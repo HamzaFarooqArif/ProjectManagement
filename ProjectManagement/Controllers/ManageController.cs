@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -36,6 +37,7 @@ namespace ProjectManagement.Controllers
                 string email = MailUtility.getCurrentEmail();
                 db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().UserName = model.username;
                 db.SaveChanges();
+                Notifications.addToNotifications(email, "Username Changed", "Your Username changed to "+model.username);
                 return RedirectToAction("Index", "Manage");
             }
             catch (Exception ex)
@@ -90,6 +92,7 @@ namespace ProjectManagement.Controllers
             AspNetUser user = MailUtility.getUserFromEmail(MailUtility.getCurrentEmail());
             ViewBag.Username = user.UserName;
             ViewBag.Email = user.Email;
+            ViewBag.notifications = Notifications.GetNotifications(MailUtility.getCurrentEmail());
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {

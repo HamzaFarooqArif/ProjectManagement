@@ -60,6 +60,7 @@
     <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
     <NavigationProperty Name="ProjectUser_MTM" Relationship="Self.FK__ProjectUs__UserI__2B3F6F97" FromRole="AspNetUsers" ToRole="ProjectUser_MTM" />
     <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+    <NavigationProperty Name="Notifications" Relationship="ProjectManagementModel.FK__Notificat__UserI__6754599E" FromRole="AspNetUser" ToRole="Notification" />
   </EntityType>
   <EntityType Name="Project">
     <Key>
@@ -223,6 +224,11 @@
       <Parameter Name="new_diagramname" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="sp_upgraddiagrams" />
+    <EntitySet Name="Notifications" EntityType="ProjectManagementModel.Notification" />
+    <AssociationSet Name="FK__Notificat__UserI__6754599E" Association="ProjectManagementModel.FK__Notificat__UserI__6754599E">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="Notification" EntitySet="Notifications" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="sp_helpdiagramdefinition_Result">
     <Property Type="Int32" Name="version" Nullable="true" />
@@ -235,4 +241,28 @@
     <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
     <Property Type="Int32" Name="OwnerID" Nullable="false" />
   </ComplexType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Time" Type="DateTime" Precision="3" />
+    <Property Name="IsRead" Type="Boolean" />
+    <Property Name="Subject" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Body" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="ProjectManagementModel.FK__Notificat__UserI__6754599E" FromRole="Notification" ToRole="AspNetUser" />
+  </EntityType>
+  <Association Name="FK__Notificat__UserI__6754599E">
+    <End Type="ProjectManagementModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+    <End Type="ProjectManagementModel.Notification" Role="Notification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Notification">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

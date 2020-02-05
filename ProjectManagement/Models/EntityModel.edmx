@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ProjectManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ProjectManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -66,6 +66,17 @@
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+          <Property Name="Time" Type="datetime" />
+          <Property Name="IsRead" Type="bit" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="50" />
+          <Property Name="Body" Type="nvarchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="Project">
           <Key>
             <PropertyRef Name="Id" />
@@ -93,8 +104,22 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <Association Name="FK__ProjectUs__Proje__2A4B4B5E">
-          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+        <Association Name="FK__Notificat__UserI__6754599E">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="Notification" Type="Self.Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectUs__Proje__4BAC3F29">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="ProjectUser_MTM" Type="Self.ProjectUser_MTM" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Project">
@@ -105,7 +130,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProjectUs__UserI__2B3F6F97">
+        <Association Name="FK__ProjectUs__UserI__4CA06362">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="ProjectUser_MTM" Type="Self.ProjectUser_MTM" Multiplicity="*" />
           <ReferentialConstraint>
@@ -117,7 +142,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ProjectUs__UserR__2C3393D0">
+        <Association Name="FK__ProjectUs__UserR__4D94879B">
           <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="0..1" />
           <End Role="ProjectUser_MTM" Type="Self.ProjectUser_MTM" Multiplicity="*" />
           <ReferentialConstraint>
@@ -223,18 +248,23 @@
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectUser_MTM" EntityType="Self.ProjectUser_MTM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__ProjectUs__Proje__2A4B4B5E" Association="Self.FK__ProjectUs__Proje__2A4B4B5E">
+          <AssociationSet Name="FK__Notificat__UserI__6754599E" Association="Self.FK__Notificat__UserI__6754599E">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Notification" EntitySet="Notification" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectUs__Proje__4BAC3F29" Association="Self.FK__ProjectUs__Proje__4BAC3F29">
             <End Role="Project" EntitySet="Project" />
             <End Role="ProjectUser_MTM" EntitySet="ProjectUser_MTM" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProjectUs__UserI__2B3F6F97" Association="Self.FK__ProjectUs__UserI__2B3F6F97">
+          <AssociationSet Name="FK__ProjectUs__UserI__4CA06362" Association="Self.FK__ProjectUs__UserI__4CA06362">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="ProjectUser_MTM" EntitySet="ProjectUser_MTM" />
           </AssociationSet>
-          <AssociationSet Name="FK__ProjectUs__UserR__2C3393D0" Association="Self.FK__ProjectUs__UserR__2C3393D0">
+          <AssociationSet Name="FK__ProjectUs__UserR__4D94879B" Association="Self.FK__ProjectUs__UserR__4D94879B">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="ProjectUser_MTM" EntitySet="ProjectUser_MTM" />
           </AssociationSet>
@@ -255,8 +285,7 @@
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ProjectManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -320,6 +349,7 @@
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="ProjectUser_MTM" Relationship="Self.FK__ProjectUs__UserI__2B3F6F97" FromRole="AspNetUsers" ToRole="ProjectUser_MTM" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <NavigationProperty Name="Notifications" Relationship="ProjectManagementModel.FK__Notificat__UserI__6754599E" FromRole="AspNetUser" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -483,6 +513,11 @@
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="Notifications" EntityType="ProjectManagementModel.Notification" />
+          <AssociationSet Name="FK__Notificat__UserI__6754599E" Association="ProjectManagementModel.FK__Notificat__UserI__6754599E">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -495,6 +530,30 @@
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
         </ComplexType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Time" Type="DateTime" Precision="3" />
+          <Property Name="IsRead" Type="Boolean" />
+          <Property Name="Subject" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Body" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="ProjectManagementModel.FK__Notificat__UserI__6754599E" FromRole="Notification" ToRole="AspNetUser" />
+        </EntityType>
+        <Association Name="FK__Notificat__UserI__6754599E">
+          <End Type="ProjectManagementModel.AspNetUser" Role="AspNetUser" Multiplicity="0..1" />
+          <End Type="ProjectManagementModel.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -618,6 +677,18 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="ProjectManagementModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="ProjectManagementModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="ProjectManagementModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
