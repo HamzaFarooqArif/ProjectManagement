@@ -318,6 +318,7 @@
     <Content Include="Views\Project\Delete.cshtml" />
     <Content Include="Views\Manage\EditUsername.cshtml" />
     <Content Include="Views\Project\viewProfile.cshtml" />
+    <Content Include="Views\Manage\viewNotification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

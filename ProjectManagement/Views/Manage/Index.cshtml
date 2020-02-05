@@ -68,19 +68,19 @@
             {
                 if (notif.IsRead == false)
                 {
-                    <tr style="cursor: pointer" onclick="window.location='#';">
+                    <tr style="cursor: pointer" onclick="window.location='/Manage/viewNotification/?id=' + @notif.Id;">
                         <th scope="row"><input type="checkbox" disabled></th>
                         <td >@notif.Subject</td>
-                        <td class="overflow-hidden">@notif.Body</td>
+                        <td class="overflow-hidden">@Html.Raw(notif.Body)</td>
                         <td>@notif.Time</td>
                     </tr>
                 }
                 else
                 {
-                    <tr class="bg-dark" style="cursor: pointer" onclick="window.location='#';">
+                    <tr class="bg-dark" style="cursor: pointer" onclick="window.location = '/Manage/viewNotification/?id=' + @notif.Id;">
                         <th scope="row"><input type="checkbox" checked="checked" disabled></th>
                         <td>@notif.Subject</td>
-                        <td class="overflow-hidden">@notif.Body</td>
+                        <td class="overflow-hidden">@Html.Raw(notif.Body)</td>
                         <td>@notif.Time</td>
                     </tr>
                 }

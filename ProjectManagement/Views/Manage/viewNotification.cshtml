@@ -1,0 +1,33 @@
+﻿@model ProjectManagement.Models.Notification
+
+@{
+    ViewBag.Title = "viewNotification";
+}
+
+<div class="bg-white rounded">
+    <br />
+    <section class="landing">
+        <div class="container">
+            <dl class="row">
+                <dt class="col-sm-6" style="text-align:right">
+                    Subject
+                </dt>
+                <dd class="col-sm-6">
+                    @Model.Subject
+                </dd>
+                <dt class="col-sm-6" style="text-align:right">
+                    Time
+                </dt>
+                <dd class="col-sm-6">
+                    @Model.Time
+                </dd>
+                <dt class="col-sm-6" style="text-align:right">
+                    Message
+                </dt>
+                <dd class="col-sm-6">
+                    @Html.Raw(Model.Body)
+                </dd>
+            </dl>
+        </div>
+    </section>
+</div>

@@ -46,7 +46,29 @@ namespace ProjectManagement.Controllers
                 return View("Error", error);
             }
         }
-
+        public ActionResult viewNotification(int id)
+        {
+            try
+            {
+                ProjectManagementEntities db = new ProjectManagementEntities();
+                Notification notif = db.Notifications.Where(n => n.Id == id).FirstOrDefault();
+                if (MailUtility.getUserFromEmail(MailUtility.getCurrentEmail()).Id.Equals(notif.UserId))
+                {
+                    db.Notifications.Where(n => n.Id == id).FirstOrDefault().IsRead = true;
+                    db.SaveChanges();
+                    return View(notif);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch(Exception ex)
+            {
+                HandleErrorInfo error = new HandleErrorInfo(ex, "Manage", "viewNotification");
+                return View("Error", error);
+            }
+        }
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
