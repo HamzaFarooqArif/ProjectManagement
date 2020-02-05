@@ -9,24 +9,50 @@
         display: inline-block;
         margin: 0 2vw 20px 2vw;
     }
+
     .projectDescription {
         background-color: #FFFFFF;
         padding: 10px;
         border: 1px solid #CDCDCD;
     }
-    .projectTitle
-    {
+
+    .projectTitle {
         color: #000000;
     }
-    .userName
-    {
+
+    .userName {
         color: #000000;
     }
 </style>
-<h1 class="text-white">Your Awesome Projects</h1>
-<a class="btn btn-light" href="/Project/Create" role="button">Create New</a>
-<br />
-<br />
+<h2 class="text-white">User Details</h2>
+<div class="bg-white rounded">
+    <br />
+    <section class="landing">
+        <div class="container">
+            <dl class="row">
+                <dt class="col-sm-6" style="text-align:right">
+                    UserName
+                </dt>
+                <dd class="col-sm-6">
+                    @ViewBag.Username
+                </dd>
+                <dt class="col-sm-6" style="text-align:right">
+                    Email
+                </dt>
+                <dd class="col-sm-6">
+                    @ViewBag.Email
+                </dd>
+                <dt class="col-sm-6" style="text-align:right">
+                    Total Projects
+                </dt>
+                <dd class="col-sm-6">
+                    @ViewBag.ProjectsCount
+                </dd>
+            </dl>
+        </div>
+    </section>
+</div>
+<h2 class="text-white">Showcase</h2>
 <div style="height:auto">
     @foreach (var item in Model)
     {

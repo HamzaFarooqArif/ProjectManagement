@@ -6,4 +6,31 @@
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
+<hr />
+<section class="landing text-white">
+    <div class="container">
+        <dl class="row">
+            <dt class="col-sm-6" style="text-align:right">
+                ControllerName
+            </dt>
+            <dd class="col-sm-6 text-break">
+                @Model.ControllerName
+            </dd>
+            <dt class="col-sm-6" style="text-align:right">
+                ActionName
+            </dt>
+            <dd class="col-sm-6 text-break">
+                @Model.ActionName
+            </dd>
+            <dt class="col-sm-6" style="text-align:right">
+                Exception
+            </dt>
+            <dd class="col-sm-6 text-break">
+                @Model.Exception
+            </dd>
+        </dl>
+    </div>
+</section>
+
+
 

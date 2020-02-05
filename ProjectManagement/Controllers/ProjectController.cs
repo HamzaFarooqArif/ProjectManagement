@@ -400,6 +400,25 @@ namespace ProjectManagement.Controllers
 
             return RedirectToAction("Index", "Project");
         }
+
+        public ActionResult viewProfile(string email)
+        {
+            try
+            {
+                List<ProjectIndexViewModel> projModelList = MailUtility.getProjectsbyEmail(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+
+                AspNetUser user = MailUtility.getUserFromEmail(email);
+                ViewBag.Username = user.UserName;
+                ViewBag.Email = user.Email;
+                ViewBag.ProjectsCount = projModelList.Count;
+                return View(projModelList);
+            }
+            catch(Exception ex)
+            {
+                HandleErrorInfo error = new HandleErrorInfo(ex, "Project", "viewProfile");
+                return View("Error", error);
+            }
+        }
     }
 
 }

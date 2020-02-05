@@ -36,13 +36,13 @@ namespace ProjectManagement.Controllers
                 string email = MailUtility.getCurrentEmail();
                 db.AspNetUsers.Where(u => u.Email.Equals(email)).FirstOrDefault().UserName = model.username;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Manage");
             }
             catch (Exception ex)
             {
-
+                HandleErrorInfo error = new HandleErrorInfo(ex, "Manage", "EditUsername");
+                return View("Error", error);
             }
-            return View();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -87,7 +87,9 @@ namespace ProjectManagement.Controllers
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
-
+            AspNetUser user = MailUtility.getUserFromEmail(MailUtility.getCurrentEmail());
+            ViewBag.Username = user.UserName;
+            ViewBag.Email = user.Email;
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
