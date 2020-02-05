@@ -78,7 +78,7 @@ namespace ProjectManagement.Controllers
             message.Subject = "Join Project";
             message.Body = callbackUrl;
 
-            Notifications.addToNotifications(email, message.Subject, callbackUrl);
+            Notifications.addToNotifications(email, message.Subject, "Join Project <b>"+projectName+"</b> by clicking <a href="+ callbackUrl + ">HERE</a>");
 
             MailUtility.sendMail(message);
         }
@@ -407,7 +407,7 @@ namespace ProjectManagement.Controllers
         {
             try
             {
-                List<ProjectIndexViewModel> projModelList = MailUtility.getProjectsbyEmail(MailUtility.getEmailFromId(User.Identity.GetUserId()));
+                List<ProjectIndexViewModel> projModelList = MailUtility.getProjectsbyEmail(email);
 
                 AspNetUser user = MailUtility.getUserFromEmail(email);
                 ViewBag.Username = user.UserName;
