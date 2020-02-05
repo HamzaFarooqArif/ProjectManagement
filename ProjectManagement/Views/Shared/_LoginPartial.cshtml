@@ -7,7 +7,14 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink(ProjectManagement.Utilities.MailUtility.getUserFromEmail(ProjectManagement.Utilities.MailUtility.getCurrentEmail()).UserName, "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class= "nav-link" })
+            @if (ProjectManagement.Utilities.Notifications.getUnreadCount() > 0)
+            {
+                <a class="nav-link" href="@Url.Action("Index", "Manage")"><span class="badge badge-pill badge-primary">@ProjectManagement.Utilities.Notifications.getUnreadCount()</span>@ProjectManagement.Utilities.MailUtility.getUserFromEmail(ProjectManagement.Utilities.MailUtility.getCurrentEmail()).UserName</a>
+            }
+            else
+            {
+                <a class="nav-link" href="@Url.Action("Index", "Manage")">@ProjectManagement.Utilities.MailUtility.getUserFromEmail(ProjectManagement.Utilities.MailUtility.getCurrentEmail()).UserName</a>
+            }
         </li>
         <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         <li>@Html.ActionLink("My Projects", "Index", new { controller = "Project" }, new { hidefocus = "hidefocus", @class = "nav-link" })</li>

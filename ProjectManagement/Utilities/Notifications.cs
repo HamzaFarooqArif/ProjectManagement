@@ -30,15 +30,30 @@ namespace ProjectManagement.Utilities
                 return false;
             }   
         }
-        public static List<Notification> GetNotifications(string email)
+        public static List<Notification> GetNotifications()
         {
+            string email = MailUtility.getCurrentEmail();
             List<Notification> result = new List<Notification>();
-            if(email != null)
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            AspNetUser user = MailUtility.getUserFromEmail(email);
+            result = db.Notifications.Where(n => n.UserId.Equals(user.Id)).ToList();
+            result = result.OrderByDescending(o => o.Time).ToList();
+            return result;
+        }
+        public static int getUnreadCount()
+        {
+            string email = MailUtility.getCurrentEmail();
+            List<Notification> notifList = new List<Notification>();
+            ProjectManagementEntities db = new ProjectManagementEntities();
+            AspNetUser user = MailUtility.getUserFromEmail(email);
+            notifList = db.Notifications.Where(n => n.UserId.Equals(user.Id)).ToList();
+            int result = 0;
+            foreach(Notification notif in notifList)
             {
-                ProjectManagementEntities db = new ProjectManagementEntities();
-                AspNetUser user = MailUtility.getUserFromEmail(email);
-                result = db.Notifications.Where(n => n.UserId.Equals(user.Id)).ToList();
-                result = result.OrderByDescending(o => o.Time).ToList();
+                if(notif.IsRead == false)
+                {
+                    result++;
+                }
             }
             return result;
         }

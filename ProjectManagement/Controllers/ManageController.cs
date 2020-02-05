@@ -114,7 +114,7 @@ namespace ProjectManagement.Controllers
             AspNetUser user = MailUtility.getUserFromEmail(MailUtility.getCurrentEmail());
             ViewBag.Username = user.UserName;
             ViewBag.Email = user.Email;
-            ViewBag.notifications = Notifications.GetNotifications(MailUtility.getCurrentEmail());
+            ViewBag.notifications = Notifications.GetNotifications();
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
