@@ -66,17 +66,17 @@
                 <strong>
                     <a class="userName" href="/Project/viewProfile?email=@Html.DisplayFor(modelItem => item.admin)">@Html.DisplayFor(modelItem => item.admin)</a>
                 </strong>
-                @if (item.editable)
+                @if (item.admin.Equals(ProjectManagement.Utilities.MailUtility.getCurrentEmail()))
                 {
                     <br />
                     <br />
-                    @Html.ActionLink("Manage", "Details", new { id = item.id }, new { @class = "userName" })
+                    @Html.ActionLink("Manage Collaborators", "Details", new { id = item.id }, new { @class = "userName" })
                 }
                 else
                 {
                     <br />
                     <br />
-                    @Html.ActionLink("Details", "Details", new { id = item.id }, new { @class = "userName" })
+                    @Html.ActionLink("Collaboration Details", "Details", new { id = item.id }, new { @class = "userName" })
                 }
             </div>
         </div>
