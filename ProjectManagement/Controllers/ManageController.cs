@@ -290,6 +290,7 @@ namespace ProjectManagement.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+                Notifications.addToNotifications(MailUtility.getCurrentEmail(), "Password Changed", "Your Password is updated to a new one");
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);

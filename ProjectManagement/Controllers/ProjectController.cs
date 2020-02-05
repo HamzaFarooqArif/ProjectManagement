@@ -78,6 +78,8 @@ namespace ProjectManagement.Controllers
             message.Subject = "Join Project";
             message.Body = callbackUrl;
 
+            Notifications.addToNotifications(email, message.Subject, callbackUrl);
+
             MailUtility.sendMail(message);
         }
         public ActionResult Index()
